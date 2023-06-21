@@ -28,6 +28,34 @@ df = df.to_dict()
 
 app = FastAPI()
 
-@app.get("/{col_id}")
-async def read_col(col_id):
-    return {str(df[col_id])}
+@app.get("/{base}/{col_id}")
+async def read_col(base, col_id):
+
+    if base == 'ifood_distinct':
+
+        sql = "select * from projeto_fia.ifood_distinct limit 10"
+
+        df = pd.read_sql(sql, engine)
+
+        for item in df.columns:
+
+            df[item] = df[item].astype('str')
+            
+        df = df.to_dict()
+
+        return {str(df[col_id])}
+    
+    else:
+
+        sql = "select * from projeto_fia.resultado_modelo"
+
+        df = pd.read_sql(sql, engine)
+
+        for item in df.columns:
+
+            df[item] = df[item].astype('str')
+            
+        df = df.to_dict()
+
+        return {str(df[col_id])}
+        
